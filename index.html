@@ -1,0 +1,181 @@
+<html>
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Nunito');
+
+.container {
+  display: flex;
+  flex-flow: column wrap;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.filter-bar {
+  width: 100%;
+  height: 60px;
+  flex: 0 1 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container {
+  width: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-flow: row wrap;
+  padding: 8px 8px 0 0;
+}
+.image-item {
+  margin: 0 0 8px 8px;
+  padding: 10px;
+  text-align: center;
+  width: calc(25% - 8px);
+  height: 120px;
+  color: #fafafa;
+  border-radius: 4px;
+}
+
+.image-hidden {
+  display: none;
+}
+
+.image-item[data-sort='audio'] {
+  background: #F8B195;
+}
+.image-item[data-sort='video'] {
+  background: #6C5B7B;
+}
+.image-item[data-sort='other'] {
+  background: #C06C84;
+}
+
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Nunito, arial;
+}
+
+.btn {
+  width: 150px;
+  padding: 8px 12px;
+  margin: 5px 12px;
+  font-size: 12px;
+  font-family: 'Nunito';
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  background: #355C7D;
+  color: #fff;
+  border: 0;
+  border-radius: 4px;
+  box-shadow: 0 3px 6px 3px rgba(0,0,0,0.1);
+  outline: none;
+  cursor: pointer;
+}
+    </style>
+
+<script src="https://kit.fontawesome.com/e391ce7786.js" crossorigin="anonymous"></script>
+
+
+
+</head>
+
+<div class="container">
+    <div class="filter-bar"><button class="btn btn-all">All podcasts</button><button class="btn btn-audio" data-filter="audio">Audio</button><button class="btn btn-video" data-filter="video">Video</button><button class="btn btn-other" data-filter="other">Other</button></div>
+    <div class="image-container">
+        <div class="image-item" data-sort="audio"><img src="" alt="" />Audio<br>
+        <br><i style="font-size:30px; color: blue;" class="fas fa-play"></i>
+    </div>
+        <div class="image-item" data-sort="audio"><img src="" alt="" />Audio<br>
+            <br><i style="font-size:30px; color: blue;" class="fas fa-play"></i></div>
+        <div class="image-item" data-sort="video"><img src="" alt="" />Video<br>
+            <br><i style="font-size:30px; color: blue;" class="fas fa-play"></i></div>
+        <div class="image-item" data-sort="other"><img src="" alt="" />Other<br>
+            <br><i style="font-size:30px; color: blue;" class="fas fa-play"></i></div>
+        <div class="image-item" data-sort="audio"><img src="" alt="" />Audio<br>
+            <br><i style="font-size:30px; color: blue;" class="fas fa-play"></i></div>
+        <div class="image-item" data-sort="video"><img src="" alt="" />Video<br>
+            <br><i style="font-size:30px; color: blue;" class="fas fa-play"></i></div>
+        <div class="image-item" data-sort="audio"><img src="" alt="" />Audio<br>
+            <br><i style="font-size:30px; color: blue;" class="fas fa-play"></i></div>
+        <div class="image-item" data-sort="audio"><img src="" alt="" />Audio<br>
+            <br><i style="font-size:30px; color: blue;" class="fas fa-play"></i></div>
+        <div class="image-item" data-sort="other"><img src="" alt="" />Other<br>
+            <br><i style="font-size:30px; color: blue;" class="fas fa-play"></i></div>
+        <div class="image-item" data-sort="video"><img src="" alt="" />Video<br>
+            <br><i style="font-size:30px; color: blue;" class="fas fa-play"></i></div>
+        <div class="image-item" data-sort="other"><img src="" alt="" />Other<br>
+            <br><i style="font-size:30px; color: blue;" class="fas fa-play"></i></div>
+        <div class="image-item" data-sort="video"><img src="" alt="" />Video<br>
+            <br><i style="font-size:30px; color: blue;" class="fas fa-play"></i></div>
+    </div>
+</div>
+
+
+<script>
+    const Filter = (() => {
+  // cache filter buttons and img-items
+  const travelBtn = document.querySelector('.btn-audio')
+  const foodBtn = document.querySelector('.btn-video')
+  const animalsBtn = document.querySelector('.btn-other');
+  const resetBtn = document.querySelector('.btn-all');
+  const imgItems = Array.from(document.querySelectorAll('.image-item'));
+  
+  // store classNames
+  imgItems.forEach(img => img.data = {classList: img.getAttribute('class')});
+  
+  // Filter all items into object of arrays.
+  const imgItemsObj = imgItems.reduce((obj, img) => {
+    const key = img.dataset.sort;
+    if (!obj[key]) {
+      obj[key] = [];
+      obj[key].push(img);
+    } else {
+      obj[key].push(img);
+    }
+    return obj;
+  }, {});
+  
+  function setClickListeners() {
+    travelBtn.addEventListener('click', filterImages, false);
+    foodBtn.addEventListener('click', filterImages, false);
+    animalsBtn.addEventListener('click', filterImages, false);
+    resetBtn.addEventListener('click', resetImages, false);
+  }
+  
+  function filterImages(e) {
+    const filter = e.target.dataset.filter;
+    const items = Object.keys(imgItemsObj).forEach(key => {
+      imgItemsObj[key].forEach((item) => {
+        item.classList.remove('image-hidden');
+        if (item.dataset.sort === filter) {
+          item.classList.add('image-filtered')
+        } else {
+          item.classList.add('image-hidden');
+        }
+      });
+    });
+  }
+  
+  function resetImages() {
+    const items = Object.keys(imgItemsObj).forEach(key => {
+      imgItemsObj[key].forEach((item) => {
+        item.setAttribute('class', item.data.classList);
+      });
+    });
+  }
+
+  // have a reset all button.
+  setClickListeners();
+})();
+</script>
+</html>
